@@ -1,22 +1,24 @@
 from typing import List
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton
+from PyQt5.QtGui import QPainter, QPaintEvent, QColor
+from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton, QMenuBar, QAction, qApp
 
+from Game.Rectangle import Rectangle
 from MyAction import MyAction
 from MyButton import MyButton
 
 
 class QWid_GameScene(QWidget):
-    scene_width = 300
-    scene_height = 300
+    scene_width = 800
+    scene_height = 800
 
-    def __init__(self, main_window: QMainWindow, actions: List[MyAction]):
+    def __init__(self, main_window: QMainWindow, action_back: MyAction):
         super().__init__(main_window)
-        self.scene = self.createMenu(actions)
-        self.setLayout(self.scene)
+        self.action_quit = action_back.action
+        self.createMenu()
         self.main_win = main_window
+        self.painter = QPainter(self)
+        self.initRects()
 
     def onShow(self):
         self.main_win.setGeometry(
@@ -24,15 +26,55 @@ class QWid_GameScene(QWidget):
             QDesktopWidget().availableGeometry().center().y() - self.scene_height / 2,
             self.scene_width, self.scene_height)
 
-    def createMenu(self, actions: List[MyAction]):
-        vboxMenu = QVBoxLayout()
-        vboxMenu.addStretch(1)
 
-        for act in actions:
-            vboxMenu.addWidget(
-                MyButton(act.name, act.action)
-            )
-        vboxMenu.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
-        return vboxMenu
+    def createMenu(self):
+        mainMenu = QMenuBar(self)
+        fileMenu = mainMenu.addMenu('File')
+        viewMenu = mainMenu.addMenu('View')
+
+        quitAction = QAction('Save', self)
+        quitAction.setShortcut("Ctrl+S")
+        quitAction.triggered.connect(self.action_save)
+        fileMenu.addAction(quitAction)
+
+        quitAction = QAction('Load', self)
+        quitAction.setShortcut("Ctrl+L")
+        quitAction.triggered.connect(self.action_load)
+        fileMenu.addAction(quitAction)
+
+        quitAction = QAction('Quit', self)
+        quitAction.setShortcut("Ctrl+Q")
+        quitAction.triggered.connect(self.action_quit)
+        fileMenu.addAction(quitAction)
+
+    def initRects(self):
+        self.rects = []
+        for i in range(4):
+            for j in range(4):
+                self.rects.append(
+                    Rectangle(
+                        [(float)((i%4)*100+50),(float)((j%4)*100+50)],
+                        50.0,
+                        QColor(556677)
+                    )
+                )
+
+    def drawRects(self):
+        for rect in self.rects:
+            rect.draw(self.painter,self)
 
 
+    def paintEvent(self, a0: QPaintEvent) -> None:
+        # self.painter.begin(self)
+        # self.painter.drawEllipse(10, 10, 50, 50)
+        # self.painter.end()
+        self.drawRects()
+
+    def action_save(self):
+        pass
+
+    def action_load(self):
+        pass
+
+    def action_quit(self):
+        pass

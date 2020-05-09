@@ -9,7 +9,6 @@ from MyButton import MyButton
 
 
 class QWid_MenuScene(QWidget):
-
     scene_width = 300
     scene_height = 300
 

@@ -2,6 +2,7 @@ import sys
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QStackedWidget
 
+from Game.QWid_GameScene import QWid_GameScene
 from MyAction import MyAction
 from Menu.QWid_MenuScene import QWid_MenuScene
 from Rules.QWid_RulesScene import QWid_RulesScene
@@ -32,13 +33,15 @@ class MyWindow(QMainWindow):
         )
         self.rulesScene = QWid_RulesScene(self, MyAction("Back", self.state_menu))
         self.settingsScene = QWid_SettingsScene(self, MyAction("Back", self.state_menu))
+        self.gameScene = QWid_GameScene(self, MyAction("Back", self.state_menu))
 
+        self.qStWid_scene.addWidget(self.gameScene)
         self.qStWid_scene.addWidget(self.settingsScene)
         self.qStWid_scene.addWidget(self.menuScene)
         self.qStWid_scene.addWidget(self.rulesScene)
 
     def action_play(self):
-        None
+        self.state_game()
 
     def action_settings(self):
         self.state_settings()
@@ -48,6 +51,10 @@ class MyWindow(QMainWindow):
 
     def action_quit(self):
         self.close()
+
+    def state_game(self):
+        self.gameScene.onShow()
+        self.qStWid_scene.setCurrentWidget(self.gameScene)
 
     def state_menu(self):
         self.menuScene.onShow()
