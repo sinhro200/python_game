@@ -3,14 +3,16 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QDesktopWidget, Q
 
 from MyAction import MyAction
 
+
 class QWid_RulesScene(QWidget):
     global btn_width
     btn_width = 200
-    scene_width = 400
+    scene_width = 300
     scene_height = 400
-    #ToDO relative path
-    # Now it doesnt work, IDK why
-    RULES_FILE_NAME = 'PycharmProjects/6_game/Rules/rules.html'
+    RULES_HTML_STYLESHEET = "QWidget {color: black;  font-size: 18px}"
+    # ToDO relative path
+    #  Now it doesnt work, IDK why
+    RULES_FILE_PATH = 'PycharmProjects/6_game/Rules/rules.html'
 
     def __init__(self, main_window: QMainWindow, actionBack: MyAction):
         super().__init__(main_window)
@@ -29,13 +31,13 @@ class QWid_RulesScene(QWidget):
         btnBack = QPushButton(act_back.name)
         btnBack.clicked.connect(act_back.action)
         btnBack.setFixedWidth(btn_width)
+        btnBack.setAlignment(Qt.AlignHCenter)
 
         text = self.readRulesFromFile()
         label = QLabel(text)
-        label.setStyleSheet("QWidget {color: black; background-color: white; font-size: 18px}")
+        label.setStyleSheet(self.RULES_HTML_STYLESHEET)
         label.setWordWrap(True)
-        label.setMaximumWidth(self.scene_width)
-        # label.setGeometry(50, 30, 120, 100)
+        label.setFixedWidth(self.scene_width)
 
         vboxScene = QVBoxLayout()
         vboxScene.addStretch(1)
@@ -45,6 +47,5 @@ class QWid_RulesScene(QWidget):
         return vboxScene
 
     def readRulesFromFile(self) -> str:
-        with open(self.RULES_FILE_NAME,"r") as file:
+        with open(self.RULES_FILE_PATH, "r") as file:
             return file.read()
-
