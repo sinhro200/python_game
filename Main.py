@@ -4,8 +4,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QPushButton, QVBoxLayout, QWidget
 
-from Action import MyAction
-from MyMenu import MyMenu
+from MyAction import MyAction
+from MenuScene import MyMenu
 
 
 class MyWindow(QMainWindow):

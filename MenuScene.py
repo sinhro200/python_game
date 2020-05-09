@@ -3,7 +3,7 @@ from typing import List
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton
 
-from Action import MyAction
+from MyAction import MyAction
 
 btn_width = 170
 
