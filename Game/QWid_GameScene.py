@@ -8,8 +8,7 @@ from MyAction import MyAction
 from MyButton import MyButton
 
 
-class QWid_MenuScene(QWidget):
-
+class QWid_GameScene(QWidget):
     scene_width = 300
     scene_height = 300
 

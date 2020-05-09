@@ -6,8 +6,6 @@ from MyButton import MyButton
 
 
 class QWid_RulesScene(QWidget):
-    global btn_width
-    btn_width = 200
     scene_width = 300
     scene_height = 400
     RULES_HTML_STYLESHEET = "QWidget {color: black;  font-size: 18px}"
