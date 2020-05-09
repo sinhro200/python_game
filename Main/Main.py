@@ -1,11 +1,10 @@
 import sys
 
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt, QRect
-from PyQt5.QtWidgets import QMainWindow, QApplication, QDesktopWidget, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QStackedWidget
 
 from MyAction import MyAction
-from MenuScene import MyMenu
+from Menu.QWid_MenuScene import QWid_MenuScene
+from Rules.QWid_RulesScene import QWid_RulesScene
 
 
 class MyWindow(QMainWindow):
@@ -17,9 +16,11 @@ class MyWindow(QMainWindow):
         self.state_menu()
         self.show()
 
-
     def initializase_components(self):
-        self.myMenu = MyMenu(
+        self.qStWid_scene = QStackedWidget()
+        self.setCentralWidget(self.qStWid_scene)
+        self.menuScene = QWid_MenuScene(
+            self,
             [
                 MyAction("Play", self.action_play),
                 MyAction("Rules", self.action_rules),
@@ -27,6 +28,10 @@ class MyWindow(QMainWindow):
                 MyAction("Quit", self.action_quit)
             ]
         )
+        self.rulesScene = QWid_RulesScene(self, MyAction("Back", self.state_menu))
+
+        self.qStWid_scene.addWidget(self.menuScene)
+        self.qStWid_scene.addWidget(self.rulesScene)
 
     def action_play(self):
         None
@@ -35,13 +40,18 @@ class MyWindow(QMainWindow):
         None
 
     def action_rules(self):
-        None
+        self.state_rules()
 
     def action_quit(self):
         self.close()
 
     def state_menu(self):
-        self.myMenu.show(self)
+        self.menuScene.onShow()
+        self.qStWid_scene.setCurrentWidget(self.menuScene)
+
+    def state_rules(self):
+        self.rulesScene.onShow()
+        self.qStWid_scene.setCurrentWidget(self.rulesScene)
 
 
 if (__name__ == "__main__"):
