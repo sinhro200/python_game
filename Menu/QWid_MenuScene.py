@@ -5,11 +5,12 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton
 
 from MyAction import MyAction
+from MyButton import MyButton
 
 
 class QWid_MenuScene(QWidget):
     global btn_width
-    btn_width = 170
+
     scene_width = 300
     scene_height = 300
 
@@ -31,14 +32,9 @@ class QWid_MenuScene(QWidget):
 
         for act in actions:
             vboxMenu.addWidget(
-                self.MyMenuButton(act.name, act.action)
+                MyButton(act.name, act.action)
             )
         vboxMenu.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
         return vboxMenu
 
-    class MyMenuButton(QPushButton):
-        def __init__(self, name, action):
-            QPushButton.__init__(self, name)
-            self.setFixedWidth(btn_width)
-            self.setText(name)
-            self.clicked.connect(action)
+

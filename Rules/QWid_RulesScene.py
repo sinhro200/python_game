@@ -2,6 +2,7 @@ from PyQt5.QtCore import QRect, Qt
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QDesktopWidget, QPushButton, QLabel
 
 from MyAction import MyAction
+from MyButton import MyButton
 
 
 class QWid_RulesScene(QWidget):
@@ -28,10 +29,7 @@ class QWid_RulesScene(QWidget):
         )
 
     def createSceneLayout(self, act_back: MyAction):
-        btnBack = QPushButton(act_back.name)
-        btnBack.clicked.connect(act_back.action)
-        btnBack.setFixedWidth(btn_width)
-        btnBack.setAlignment(Qt.AlignHCenter)
+        btnBack = MyButton(act_back.name,act_back.action)
 
         text = self.readRulesFromFile()
         label = QLabel(text)
