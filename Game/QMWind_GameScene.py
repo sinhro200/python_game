@@ -2,6 +2,7 @@ from PyQt5.QtGui import QPainter, QPaintEvent
 from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction
 
 from Game.Animation import Animator, AnimationCollection_clrColl
+from Game.GamePrefs import GamePrefs
 from Game.RectangleUtils import RectangleFactory, RectangleController
 from MyAction import MyAction
 
@@ -11,12 +12,12 @@ class QMWind_GameScene(QMainWindow):
     scene_height = 800
     rect_size = 120
 
-    def __init__(self, main_window: QMainWindow, action_back: MyAction):
+    def __init__(self, main_window: QMainWindow, action_back: MyAction, gamePrefs: GamePrefs):
         super().__init__(main_window)
         self.action_quit = action_back.action
         self.animations = AnimationCollection_clrColl()
         self.createMenu()
-        self.createBody()
+        self.createBody(gamePrefs)
         self.main_win = main_window
         self.painter = QPainter(self)
 
@@ -46,14 +47,18 @@ class QMWind_GameScene(QMainWindow):
         quitAction.triggered.connect(self.action_quit)
         fileMenu.addAction(quitAction)
 
-    def createBody(self):
-        self.rects = RectangleFactory.createDefRectangles(
-            self, self.scene_width, self.scene_height, self.rect_size
+    def createBody(self,gamePrefs):
+        # self.rects = RectangleFactory.createDefRectangles(
+        #     self, self.scene_width, self.scene_height, self.rect_size
+        # )
+        self.rects = RectangleFactory.createRectangles(
+            self, self.scene_width, self.scene_height, self.rect_size,gamePrefs.colors
         )
         animator = Animator(self.animations, 1000)
         controller = RectangleController(
             self.rects,
-            [[0, 1, 5, 4], [2, 3, 7, 6], [8, 9, 13, 12], [10, 11, 15, 14]],
+            gamePrefs.movingPaths,
+            #[[0, 1, 5, 4], [2, 3, 7, 6], [8, 9, 13, 12], [10, 11, 15, 14]],
             animator
         )
 

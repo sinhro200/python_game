@@ -24,36 +24,34 @@ class Rectangle(QPushButton):
         self.setText(_num.__str__())
         self.size = size
         self.color = color
-        self.pos = pos
         self.setFixedSize(size, size)
         self.move(pos[0], pos[1])
         self.setColor(color)
         self.clickHandler = None
         self.pressed.connect(self.onClick)
 
-    num=property()
+    num = property()
 
     @num.setter
-    def num(self,val):
-        self._num=val
+    def num(self, val):
+        self._num = val
         self.setText(self._num.__str__())
         self.update()
         self.updateGeometry()
-        print(self._num.__str__()+" :" + self.x().__str__() + " " + self.y().__str__())
+        print(self._num.__str__() + " :" + self.x().__str__() + " " + self.y().__str__())
 
     @num.getter
     def num(self):
         return self._num
 
-
-    def draw(self, painter: QPainter, qpd: QPaintDevice):
-        painter.begin(qpd)
-        painter.setBrush(self.color)
-        painter.drawRect(QRectF(
-            self.pos[0], self.pos[1],
-            self.size, self.size
-        ))
-        painter.end()
+    # def draw(self, painter: QPainter, qpd: QPaintDevice):
+    #     painter.begin(qpd)
+    #     painter.setBrush(self.color)
+    #     painter.drawRect(QRectF(
+    #         self.pos[0], self.pos[1],
+    #         self.size, self.size
+    #     ))
+    #     painter.end()
 
     def onClick(self):
         self.clickHandler.onClick(self._num)

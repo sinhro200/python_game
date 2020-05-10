@@ -3,14 +3,14 @@ from typing import List
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor
 
-from Game.GamePrefs import GamePrefs
+from Game.GamePrefs import GamePrefs, MovingPath
 from Game.MyClearedCollection import MyClearedCollection
 from Game.Rectangle import Rectangle, ClickHandler
 
 
 class RectangleController():
 
-    def __init__(self, rects: List[Rectangle], movingPaths: List[List[int]], animator):
+    def __init__(self, rects: List[Rectangle], movingPaths: List[MovingPath], animator):
         self.rects = rects
         self.movingPaths = movingPaths
         self.animator = animator
@@ -43,6 +43,11 @@ class RectangleController():
         timeoutAction.run(self.animator.duration)
         self.timeoutActions.append(timeoutAction)
 
+    def getCorrectPath(self, num):
+        for path in self.movingPaths:
+            if path.clickable.__contains__(num):
+                return path.movable
+
     class AfterTimeoutAction():
         def __init__(self, r1: Rectangle, r2: Rectangle):
             self.setRects(r1, r2)
@@ -70,10 +75,7 @@ class RectangleController():
         def shouldDelete(self, elem):
             elem.timer.remainingTime() <= 0
 
-    def getCorrectPath(self, num):
-        for path in self.movingPaths:
-            if path.__contains__(num):
-                return path
+
 
 
 class RectangleFactory():
@@ -104,7 +106,7 @@ class RectangleFactory():
         return rects
 
     @staticmethod
-    def createRectangles(scene_parent, scene_width, scene_height, rect_size, gamePrefs: GamePrefs):
+    def createRectangles(scene_parent, scene_width, scene_height, rect_size, colors):
         rects = []
         leftRight_padding = (scene_width - 4 * rect_size - 3 * rect_size / 2) / 2
         topDown_padding = (scene_height - 4 * rect_size - 3 * rect_size / 2) / 2
@@ -118,7 +120,7 @@ class RectangleFactory():
                         (float)((i % field_size) * rect_size + i * rect_size / 2 + topDown_padding)
                     ],
                     rect_size,
-                    gamePrefs.colors[j + i * field_size]
+                    colors[j + i * field_size]
                 )
                 rects.append(r)
         return rects
