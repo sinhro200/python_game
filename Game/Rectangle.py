@@ -5,32 +5,45 @@ from PyQt5.QtWidgets import QPushButton
 
 class ClickHandler():
     def __init__(self, on_click):
-        self.onClick = on_click
+        self._onClick = on_click
+        self.isEnable = True
 
     def onClick(self, num):
-        self.onClick(num)
+        if self.isEnable:
+            self._onClick(num)
+
+    def setClickable(self, isEnable):
+        self.isEnable = isEnable
 
 
 class Rectangle(QPushButton):
 
-    def __init__(self, parent, num, pos, size, color: QColor):
+    def __init__(self, parent, _num, pos, size, color: QColor):
         super().__init__(parent)
-        self.num = num
-        print(num)
+        self._num = _num
+        self.setText(_num.__str__())
         self.size = size
         self.color = color
         self.pos = pos
         self.setFixedSize(size, size)
         self.move(pos[0], pos[1])
         self.setColor(color)
-        self._clickHandler = None
+        self.clickHandler = None
         self.pressed.connect(self.onClick)
 
-    clickHandler = property()
+    num=property()
 
-    @clickHandler.setter
-    def clickHandler(self, click_handler):
-        self._clickHandler = click_handler
+    @num.setter
+    def num(self,val):
+        self._num=val
+        self.setText(self._num.__str__())
+        self.update()
+        self.updateGeometry()
+
+    @num.getter
+    def num(self):
+        return self._num
+
 
     def draw(self, painter: QPainter, qpd: QPaintDevice):
         painter.begin(qpd)
@@ -42,7 +55,7 @@ class Rectangle(QPushButton):
         painter.end()
 
     def onClick(self):
-        self._clickHandler.onClick(self.num)
+        self.clickHandler.onClick(self._num)
 
     def setColor(self, color):
         palette = self.palette()

@@ -1,14 +1,9 @@
-from typing import List
+from PyQt5.QtGui import QPainter, QPaintEvent
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction
 
-from PyQt5.QtCore import QPropertyAnimation, QRectF, QRect, Qt, QPointF
-from PyQt5.QtGui import QPainter, QPaintEvent, QColor, QPalette
-from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton, QMenuBar, QAction, qApp, \
-    QLayout, QHBoxLayout, QFormLayout, QGridLayout, QLabel
-
-from Game.Rectangle import Rectangle
-from Game.RectangleUtils import RectangleFactory, RectangleController, Animator
+from Game.Animation import Animator, AnimationCollection_clrColl
+from Game.RectangleUtils import RectangleFactory, RectangleController
 from MyAction import MyAction
-from MyButton import MyButton
 
 
 class QMWind_GameScene(QMainWindow):
@@ -19,18 +14,11 @@ class QMWind_GameScene(QMainWindow):
     def __init__(self, main_window: QMainWindow, action_back: MyAction):
         super().__init__(main_window)
         self.action_quit = action_back.action
+        self.animations = AnimationCollection_clrColl()
         self.createMenu()
         self.createBody()
         self.main_win = main_window
         self.painter = QPainter(self)
-        self.animations = []
-
-
-    animation = property()
-
-    @animation.setter
-    def animation(self,val):
-        self.animations.append(val)
 
     def onShow(self):
         self.main_win.setGeometry(
@@ -62,7 +50,7 @@ class QMWind_GameScene(QMainWindow):
         self.rects = RectangleFactory.createDefRectangles(
             self, self.scene_width, self.scene_height, self.rect_size
         )
-        animator = Animator(self, 1000)
+        animator = Animator(self.animations, 1000)
         controller = RectangleController(
             self.rects,
             [[0, 1, 5, 4], [2, 3, 7, 6], [8, 9, 13, 12], [10, 11, 15, 14]],
@@ -73,14 +61,6 @@ class QMWind_GameScene(QMainWindow):
         self.mousePressed = True
         self.startX = e.x()
         self.startY = e.y()
-
-        # animation = QPropertyAnimation(self.rect_but, b"geometry");
-        # animation.setDuration(4000);
-        # animation.setStartValue(QRectF(200, 200, 100, 0));
-        # animation.setEndValue(QRectF(600, 600, 100, 300));
-        # animation.setLoopCount(-1)
-        # self.animation = animation
-        # self.animation.start();
 
     def drawRects(self):
         for rect in self.rects:

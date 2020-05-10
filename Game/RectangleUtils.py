@@ -1,28 +1,11 @@
 from typing import List
 
-from PyQt5.QtCore import QPropertyAnimation, QPointF
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QMainWindow, QAction
 
 from Game.GamePrefs import GamePrefs
+from Game.MyClearedCollection import MyClearedCollection
 from Game.Rectangle import Rectangle, ClickHandler
-
-
-class Animator():
-
-    def __init__(self, parent:QMainWindow, duration):
-        self.duration = duration
-        self.parent = parent
-
-    def move(self, r1: Rectangle, r2: Rectangle):
-        animation = QPropertyAnimation(r1, b"pos")
-        # animation.setPropertyName(b"pos")
-        animation.setDuration(self.duration)
-        animation.setStartValue(QPointF(r1.pos[0], r1.pos[1]))
-        animation.setEndValue(QPointF(r2.pos[0], r2.pos[1]))
-        animation.setLoopCount(1)
-        self.parent.animation = animation
-        animation.start()
 
 
 class RectangleController():
@@ -31,6 +14,7 @@ class RectangleController():
         self.rects = rects
         self.movingPaths = movingPaths
         self.animator = animator
+        self.timeoutActions = RectangleController.TimeoutActions_clrColl()
         for r in rects:
             r.clickHandler = ClickHandler(self.onRectPressed)
 
@@ -43,12 +27,48 @@ class RectangleController():
                     rects.append(rect)
                     break
         prev = rects[0]
-        for i in range(len(rects)):
-            cur = rects[i]
-            self.animator.move(prev, cur)
+        first_num = prev.num
+        for cur in rects[1:]:
+            cur.clickHandler.setClickable(False)
+            self.swapRects(prev, cur)
+            prev.num = cur.num
             prev = cur
-        self.animator.move(prev, rects[0])
+        self.swapRects(prev, rects[0])
+        prev.num = first_num
 
+    def swapRects(self, r1: Rectangle, r2: Rectangle):
+        self.animator.move(r1, r2)
+
+        timeoutAction = RectangleController.AfterTimeoutAction(r1, r2)
+        timeoutAction.run(self.animator.duration)
+        self.timeoutActions.append(timeoutAction)
+
+    class AfterTimeoutAction():
+        def __init__(self, r1: Rectangle, r2: Rectangle):
+            self.setRects(r1, r2)
+            self.timer = QTimer()
+            self.timer.setSingleShot(True)
+            self.timer.timeout.connect(self.action)
+
+        def run(self, time):
+            self.timer.start(time*1.1)
+
+        def setRects(self, r1: Rectangle, r2: Rectangle):
+            self.r1 = r1
+            self.r2 = r2
+
+        def action(self):
+            self.r1.updateGeometry()
+            self.r1.updateMicroFocus()
+            self.r1.text()
+            self.r1.update()
+            self.r2.update()
+            #self.r1.num, self.r2.num = self.r2.num, self.r1.num
+            self.r1.clickHandler.setClickable(True)
+
+    class TimeoutActions_clrColl(MyClearedCollection):
+        def shouldDelete(self, elem):
+            elem.timer.remainingTime() <= 0
 
     def getCorrectPath(self, num):
         for path in self.movingPaths:

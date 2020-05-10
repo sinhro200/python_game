@@ -1,4 +1,4 @@
 class GamePrefs():
-    def __init__(self, movingPaths, posNums, colors):
+    def __init__(self, movingPaths, colors):
         self.movingPaths = movingPaths
         self.colors = colors
