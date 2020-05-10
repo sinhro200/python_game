@@ -21,8 +21,8 @@ class Animator():
         n2 = r2.num
         animation = QPropertyAnimation(r1, b"pos")
         animation.setDuration(self.duration)
-        animation.setStartValue(QPointF(r1.pos[0], r1.pos[1]))
-        animation.setEndValue(QPointF(r2.pos[0], r2.pos[1]))
+        animation.setStartValue(QPointF(r1.x(), r1.y()))
+        animation.setEndValue(QPointF(r2.x(), r2.y()))
         animation.setLoopCount(1)
         self.animations.append(animation)
         animation.start()

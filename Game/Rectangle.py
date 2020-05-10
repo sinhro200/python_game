@@ -39,6 +39,7 @@ class Rectangle(QPushButton):
         self.setText(self._num.__str__())
         self.update()
         self.updateGeometry()
+        print(self._num.__str__()+" :" + self.x().__str__() + " " + self.y().__str__())
 
     @num.getter
     def num(self):
