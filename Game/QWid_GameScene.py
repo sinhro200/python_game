@@ -1,7 +1,9 @@
 from typing import List
 
-from PyQt5.QtGui import QPainter, QPaintEvent, QColor
-from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton, QMenuBar, QAction, qApp
+from PyQt5.QtCore import QPropertyAnimation, QRectF, QRect, Qt, QPointF
+from PyQt5.QtGui import QPainter, QPaintEvent, QColor, QPalette
+from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton, QMenuBar, QAction, qApp, \
+    QLayout, QHBoxLayout
 
 from Game.Rectangle import Rectangle
 from MyAction import MyAction
@@ -16,6 +18,7 @@ class QWid_GameScene(QWidget):
         super().__init__(main_window)
         self.action_quit = action_back.action
         self.createMenu()
+        self.createBody()
         self.main_win = main_window
         self.painter = QPainter(self)
         self.initRects()
@@ -47,10 +50,24 @@ class QWid_GameScene(QWidget):
         quitAction.triggered.connect(self.action_quit)
         fileMenu.addAction(quitAction)
 
+    def createBody(self):
+        layout = QHBoxLayout(self)
+        rect_but = QPushButton()
+        rect_but.setFixedSize(50,50)
+        palette = rect_but.palette()
+        palette.setColor(QPalette.Button,QColor(102030))
+        rect_but.setAutoFillBackground(True)
+        rect_but.setPalette(palette)
+        rect_but.update()
+        self.rect_but = rect_but
+        layout.addWidget(rect_but,1,Qt.AlignHCenter)
+        self.setLayout(layout)
+
     def initRects(self):
         self.rects = []
         for i in range(4):
             for j in range(4):
+
                 self.rects.append(
                     Rectangle(
                         [(float)((i%4)*100+50),(float)((j%4)*100+50)],
@@ -59,15 +76,35 @@ class QWid_GameScene(QWidget):
                     )
                 )
 
+    def mousePressEvent(self, e):
+        self.mousePressed = True
+        self.startX = e.x()
+        self.startY = e.y()
+
+        animation = QPropertyAnimation(self.rect_but, b"geometry");
+        animation.setDuration(4000);
+        animation.setStartValue(QRectF(200, 200, 100, 0));
+        animation.setEndValue(QRectF(600, 600, 100, 300));
+        animation.setLoopCount(-1)
+        self.animation = animation
+        self.animation.start();
+        # self.animation = QPropertyAnimation(
+        #     self.rect_but,
+        #     b"geometry",
+        #     duration=4000,
+        #     startValue=QRectF(0, 0,50,200),
+        #     endValue=QRectF(500, 10,50,200),
+        #     loopCount=-1,
+        # )
+        # self.animation.start()
+
+
     def drawRects(self):
         for rect in self.rects:
             rect.draw(self.painter,self)
 
 
     def paintEvent(self, a0: QPaintEvent) -> None:
-        # self.painter.begin(self)
-        # self.painter.drawEllipse(10, 10, 50, 50)
-        # self.painter.end()
         self.drawRects()
 
     def action_save(self):
