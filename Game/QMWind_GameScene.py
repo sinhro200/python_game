@@ -6,12 +6,12 @@ from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, Q
     QLayout, QHBoxLayout, QFormLayout, QGridLayout, QLabel
 
 from Game.Rectangle import Rectangle
-from Game.RectangleFactory import RectangleFactory
+from Game.RectangleUtils import RectangleFactory, RectangleController, Animator
 from MyAction import MyAction
 from MyButton import MyButton
 
 
-class QWid_GameScene(QMainWindow):
+class QMWind_GameScene(QMainWindow):
     scene_width = 800
     scene_height = 800
     rect_size = 120
@@ -23,6 +23,14 @@ class QWid_GameScene(QMainWindow):
         self.createBody()
         self.main_win = main_window
         self.painter = QPainter(self)
+        self.animations = []
+
+
+    animation = property()
+
+    @animation.setter
+    def animation(self,val):
+        self.animations.append(val)
 
     def onShow(self):
         self.main_win.setGeometry(
@@ -53,6 +61,12 @@ class QWid_GameScene(QMainWindow):
     def createBody(self):
         self.rects = RectangleFactory.createDefRectangles(
             self, self.scene_width, self.scene_height, self.rect_size
+        )
+        animator = Animator(self, 1000)
+        controller = RectangleController(
+            self.rects,
+            [[0, 1, 5, 4], [2, 3, 7, 6], [8, 9, 13, 12], [10, 11, 15, 14]],
+            animator
         )
 
     def mousePressEvent(self, e):

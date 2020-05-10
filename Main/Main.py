@@ -2,7 +2,7 @@ import sys
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QStackedWidget
 
-from Game.QWid_GameScene import QWid_GameScene
+from Game.QMWind_GameScene import QMWind_GameScene
 from MyAction import MyAction
 from Menu.QWid_MenuScene import QWid_MenuScene
 from Rules.QWid_RulesScene import QWid_RulesScene
@@ -33,7 +33,7 @@ class MyWindow(QMainWindow):
         )
         self.rulesScene = QWid_RulesScene(self, MyAction("Back", self.state_menu))
         self.settingsScene = QWid_SettingsScene(self, MyAction("Back", self.state_menu))
-        self.gameScene = QWid_GameScene(self, MyAction("Back", self.state_menu))
+        self.gameScene = QMWind_GameScene(self, MyAction("Back", self.state_menu))
 
         self.qStWid_scene.addWidget(self.gameScene)
         self.qStWid_scene.addWidget(self.settingsScene)
