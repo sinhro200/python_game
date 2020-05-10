@@ -1,13 +1,21 @@
 from PyQt5.QtCore import QRectF
-from PyQt5.QtGui import QPainter, QColor, QPaintDevice
+from PyQt5.QtGui import QPainter, QColor, QPaintDevice, QPalette
+from PyQt5.QtWidgets import QPushButton
 
 
-class Rectangle():
+class Rectangle(QPushButton):
 
-    def __init__(self, pos, size, color: QColor):
+    def __init__(self,parent,num, pos, size, color: QColor):
+        super().__init__(parent)
+        self.num = num
+        print(num)
         self.size = size
         self.color = color
         self.pos = pos
+        self.setFixedSize(size, size)
+        self.move(pos[0],pos[1])
+        self.setColor(color)
+        self.pressed.connect(self.onClick)
 
     def draw(self, painter: QPainter,qpd : QPaintDevice):
         painter.begin(qpd)
@@ -17,3 +25,13 @@ class Rectangle():
             self.size, self.size
         ))
         painter.end()
+
+    def onClick(self):
+        print(self.num)
+
+    def setColor(self,color):
+        palette = self.palette()
+        palette.setColor(QPalette.Button, color)
+        self.setAutoFillBackground(True)
+        self.setPalette(palette)
+        self.update()
