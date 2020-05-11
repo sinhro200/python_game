@@ -11,7 +11,7 @@ class GameConstructor():
         self.action_back = action_back
 
     def createGame(self, gameParams: GameParams) -> QMWind_GameScene:
-        game_scene = QMWind_GameScene(self.main_wind,self.action_back)
+        game_scene = QMWind_GameScene(self.main_wind,self.action_back,gameParams.sett_game_scene_width,gameParams.sett_game_scene_height)
         game_scene.initRectangles(
             gameParams.sett_game_scene_width,
             gameParams.sett_game_scene_height,
@@ -23,7 +23,7 @@ class GameConstructor():
             gameParams.sett_moving_paths
         )
         game_scene.initConditionsToWin(0)
-        game_scene.initTimer(gameParams.sett_remain_time)
+        game_scene.initTimer()
 
         return game_scene
 

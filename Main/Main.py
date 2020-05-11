@@ -64,14 +64,14 @@ class MainWindow(QMainWindow):
     def action_quit_from_game(self):
         self.state_menu()
         self.stckWidg_scene.removeWidget(self.gameScene)
-        self.gameScene = self.createGameScene()
-        self.stckWidg_scene.addWidget(self.gameScene)
 
     def action_quit_from_settings(self):
         self.gameParams = self.settingsScene.getChangedGameParams()
         self.state_menu()
 
     def state_game(self):
+        self.gameScene = self.createGameScene()
+        self.stckWidg_scene.addWidget(self.gameScene)
         self.gameScene.onShow()
         self.stckWidg_scene.setCurrentWidget(self.gameScene)
 

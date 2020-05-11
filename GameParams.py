@@ -3,16 +3,68 @@ from PyQt5.QtGui import QColor
 
 class GameParams():
 
-    def __init__(self, colors_palette, moving_paths, apply_labels, apply_timer, remain_time, game_width, game_height, rect_size, rectangle_time_to_move):
+    def __init__(self, colors_palette, moving_paths, apply_labels, apply_timer, game_width, game_height,
+                 rect_size, rectangle_time_to_move):
         self.sett_colors_palette = colors_palette
-        self.sett_moving_paths =moving_paths
+        self.sett_moving_paths = moving_paths
         self.sett_apply_labels = apply_labels
         self.sett_apply_timer = apply_timer
-        self.sett_remain_time = remain_time
         self.sett_game_scene_width = game_width
         self.sett_game_scene_height = game_height
         self.sett_rect_size = rect_size
         self.sett_rectangle_time_to_move = rectangle_time_to_move
+
+
+class Restrictions():
+    min_width = 1
+    max_width = 1000
+    min_height = 1
+    max_height = 1000
+    min_size = 1
+    max_size = 200
+    min_time_to_move = 1
+    max_time_to_move = 1000000
+
+    @staticmethod
+    def check(gp: GameParams):
+        return (
+                Restrictions.checkWidth(gp.sett_game_scene_width) and
+                Restrictions.checkHeight(gp.sett_game_scene_height) and
+                Restrictions.checkSize(gp.sett_rect_size) and
+                Restrictions.checkTimeToMove(gp.sett_rectangle_time_to_move)
+        )
+
+    @staticmethod
+    def checkWidth(val):
+        return Restrictions.applyToMinMax(
+            val,
+            Restrictions.min_width, Restrictions.max_width
+        )
+
+    @staticmethod
+    def checkHeight(val):
+        return Restrictions.applyToMinMax(
+            val,
+            Restrictions.min_height, Restrictions.max_height
+        )
+
+    @staticmethod
+    def checkSize(val):
+        return Restrictions.applyToMinMax(
+            val,
+            Restrictions.min_size, Restrictions.max_size
+        )
+
+    @staticmethod
+    def checkTimeToMove(val):
+        return Restrictions.applyToMinMax(
+            val,
+            Restrictions.min_time_to_move, Restrictions.max_time_to_move
+        )
+
+    @staticmethod
+    def applyToMinMax(val_to_check, min, max):
+        return val_to_check > min and val_to_check < max
 
 
 class MovingPath():
@@ -30,7 +82,6 @@ class DefaultValues():
             DefaultValues.default_paths(),
             DefaultValues.default_apply_labels(),
             DefaultValues.default_apply_timer(),
-            DefaultValues.default_remain_time_msec(),
             DefaultValues.default_width(),
             DefaultValues.default_height(),
             DefaultValues.default_rect_size(),

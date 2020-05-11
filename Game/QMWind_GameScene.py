@@ -7,16 +7,16 @@ from MyAction import MyAction
 
 
 class QMWind_GameScene(QMainWindow):
-    scene_width = 800
-    scene_height = 800
-    rect_size = 120
 
-    def __init__(self, main_window: QMainWindow, action_back: MyAction):
+
+    def __init__(self, main_window: QMainWindow, action_back: MyAction, width, height):
         super().__init__(main_window)
         self.action_quit = action_back.action
         self.animations = AnimationCollection_clrColl()
         self.createMenu()
         self.main_win = main_window
+        self.scene_width = width
+        self.scene_height = height
         # self.painter = QPainter(self)
 
     def onShow(self):
@@ -30,7 +30,7 @@ class QMWind_GameScene(QMainWindow):
             self, scene_width, scene_height, rect_size, colors
         )
 
-    def initTimer(self, time):
+    def initTimer(self):
         pass
 
     def initConditionsToWin(self, win_conditions):
