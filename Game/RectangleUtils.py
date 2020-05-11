@@ -3,9 +3,10 @@ from typing import List
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor
 
-from Game.GamePrefs import GamePrefs, MovingPath
+
 from Game.MyClearedCollection import MyClearedCollection
 from Game.Rectangle import Rectangle, ClickHandler
+from GameParams import MovingPath
 
 
 class RectangleController():
@@ -106,7 +107,7 @@ class RectangleFactory():
         return rects
 
     @staticmethod
-    def createRectangles(scene_parent, scene_width, scene_height, rect_size, colors):
+    def createRectangles(scene_parent, scene_width, scene_height, rect_size, colors_by_nums):
         rects = []
         leftRight_padding = (scene_width - 4 * rect_size - 3 * rect_size / 2) / 2
         topDown_padding = (scene_height - 4 * rect_size - 3 * rect_size / 2) / 2
@@ -120,7 +121,7 @@ class RectangleFactory():
                         (float)((i % field_size) * rect_size + i * rect_size / 2 + topDown_padding)
                     ],
                     rect_size,
-                    colors[j + i * field_size]
+                    colors_by_nums[j + i * field_size]
                 )
                 rects.append(r)
         return rects

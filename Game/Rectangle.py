@@ -1,5 +1,5 @@
-from PyQt5.QtCore import QRectF
-from PyQt5.QtGui import QPainter, QColor, QPaintDevice, QPalette
+
+from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtWidgets import QPushButton
 
 
@@ -38,7 +38,6 @@ class Rectangle(QPushButton):
         self.setText(self._num.__str__())
         self.update()
         self.updateGeometry()
-        print(self._num.__str__() + " :" + self.x().__str__() + " " + self.y().__str__())
 
     @num.getter
     def num(self):
