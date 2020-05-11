@@ -2,7 +2,7 @@ from typing import List
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QDesktopWidget, QWidget, QMainWindow, QVBoxLayout, QPushButton, QHBoxLayout
 
 from MyAction import MyAction
 from MyButton import MyButton
@@ -26,13 +26,12 @@ class QWid_MenuScene(QWidget):
 
     def createMenu(self, actions: List[MyAction]):
         vboxMenu = QVBoxLayout()
-        vboxMenu.addStretch(1)
+        vboxMenu.setContentsMargins(5, 40, 5, 0)
 
         for act in actions:
             vboxMenu.addWidget(
                 MyButton(act.name, act.action)
             )
-        vboxMenu.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
+        vboxMenu.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
+        vboxMenu.setSpacing(10)
         return vboxMenu
-
-
