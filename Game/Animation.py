@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QPropertyAnimation, QPointF, QTimer
+from PyQt5.QtCore import QPropertyAnimation, QPointF
 
 from Game.MyClearedCollection import MyClearedCollection
 from Game.Rectangle import Rectangle

@@ -3,7 +3,6 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QStackedWidget
 
 import GameParams
-from Game.QMWind_GameScene import QMWind_GameScene
 from GameConstructor.GameConstructor import GameConstructor
 from MyAction import MyAction
 from Menu.QWid_MenuScene import QWid_MenuScene

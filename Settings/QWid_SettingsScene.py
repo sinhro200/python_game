@@ -1,10 +1,8 @@
 import copy
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QVBoxLayout, QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget
 
 from MyAction import MyAction
-from MyButton import MyButton
 from GameParams import GameParams, Restrictions
 from Settings import LayoutCreator
 

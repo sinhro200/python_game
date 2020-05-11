@@ -1,10 +1,8 @@
 from typing import List
 
-import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QTextEdit, QSizePolicy, QPushButton, QCheckBox, \
     QColorDialog
-from PyQt5.uic.properties import QtWidgets
 
 
 class Scene(QVBoxLayout):
@@ -75,7 +73,6 @@ class ButtonModule(MyModule):
 class BooleanModule(MyLabeledModule):
     def createBody(self, defValue):
         self.checkBox = QCheckBox()
-        # self.text.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         return self.checkBox
 
     def getValue(self):

@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QPainter, QPaintEvent
+from PyQt5.QtGui import QPaintEvent
 from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction
 
 from Game.Animation import Animator, AnimationCollection_clrColl
