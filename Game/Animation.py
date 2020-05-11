@@ -17,8 +17,7 @@ class Animator():
         self.animations = animations
 
     def move(self, r1: Rectangle, r2: Rectangle):
-        n1 = r1.num
-        n2 = r2.num
+        r1.in_animation = True
         animation = QPropertyAnimation(r1, b"pos")
         animation.setDuration(self.duration)
         animation.setStartValue(QPointF(r1.x(), r1.y()))

@@ -3,7 +3,6 @@ from typing import List
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor
 
-
 from Game.MyClearedCollection import MyClearedCollection
 from Game.Rectangle import Rectangle, ClickHandler
 from GameParams import MovingPath
@@ -27,6 +26,9 @@ class RectangleController():
                 if rect.num == i_in_path:
                     rects.append(rect)
                     break
+        for r in rects:
+            if r.in_animation:
+                return
         prev = rects[0]
         first_num = prev.num
         for cur in rects[1:]:
@@ -57,26 +59,20 @@ class RectangleController():
             self.timer.timeout.connect(self.action)
 
         def run(self, time):
-            self.timer.start(time*1.1)
+            self.timer.start(time * 1.1)
 
         def setRects(self, r1: Rectangle, r2: Rectangle):
             self.r1 = r1
             self.r2 = r2
 
         def action(self):
-            self.r1.updateGeometry()
-            self.r1.updateMicroFocus()
-            self.r1.text()
-            self.r1.update()
-            self.r2.update()
-            #self.r1.num, self.r2.num = self.r2.num, self.r1.num
+            self.r1.in_animation = False
+            self.r2.in_animation = False
             self.r1.clickHandler.setClickable(True)
 
     class TimeoutActions_clrColl(MyClearedCollection):
         def shouldDelete(self, elem):
             elem.timer.remainingTime() <= 0
-
-
 
 
 class RectangleFactory():

@@ -26,6 +26,8 @@ class Rectangle(QPushButton):
         self.color = color
         self.setFixedSize(size, size)
         self.move(pos[0], pos[1])
+        self.position = pos
+        self.in_animation = False
         self.setColor(color)
         self.clickHandler = None
         self.pressed.connect(self.onClick)
