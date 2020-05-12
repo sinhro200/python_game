@@ -1,10 +1,10 @@
 from PyQt5.QtCore import QPropertyAnimation, QPointF
 
-from Game.MyClearedCollection import MyClearedCollection
+from Game.MyClearableCollection import MyClearableCollection
 from Game.Rectangle import Rectangle
 
 
-class AnimationCollection_clrColl(MyClearedCollection):
+class AnimationCollection_clrColl(MyClearableCollection):
 
     def shouldDelete(self, elem: QPropertyAnimation):
         return elem.state() == QPropertyAnimation.Stopped

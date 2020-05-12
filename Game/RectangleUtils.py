@@ -3,7 +3,7 @@ from typing import List
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QColor
 
-from Game.MyClearedCollection import MyClearedCollection
+from Game.MyClearableCollection import MyClearableCollection
 from Game.Rectangle import Rectangle, ClickHandler
 from GameParams import MovingPath
 
@@ -16,7 +16,7 @@ class RectangleController():
         self.animator = animator
         self.isWinChecker = RectangleController.IsWinChecker(self.rects, conditions_to_win, action_win)
         # self.conditions_to_win = conditions_to_win
-        self.timeoutActions = RectangleController.TimeoutActions_clrColl()
+        self.timeoutActions = RectangleController.AfterMovementActions_clrColl()
         for r in rects:
             r.clickHandler = ClickHandler(self.onRectPressed)
 
@@ -40,6 +40,7 @@ class RectangleController():
             prev = cur
         self.swapRects(prev, rects[0])
         prev.num = first_num
+        self.isWinChecker.lateCheck(self.animator.duration)
 
     def swapRects(self, r1: Rectangle, r2: Rectangle):
         self.animator.move(r1, r2)
@@ -52,11 +53,24 @@ class RectangleController():
             if path.clickable.__contains__(num):
                 return path.movable
 
+    class Timers_clrColl(MyClearableCollection):
+        def shouldDelete(self, elem):
+            elem.remainingTime() <= 0
+
     class IsWinChecker():
+
         def __init__(self, rects, conditions_to_win, onWinAction):
             self.rects = rects
             self.conditionsToVin = conditions_to_win
             self.onWinAction = onWinAction
+            self.timers = RectangleController.Timers_clrColl()
+
+        def lateCheck(self, timeMsec):
+            timer = QTimer()
+            timer.timeout.connect(self.check)
+            timer.setSingleShot(True)
+            timer.start(timeMsec)
+            self.timers.append(timer)
 
         def check(self):
             for win_path in self.conditionsToVin:
@@ -67,7 +81,7 @@ class RectangleController():
                         return
             self.onWinAction()
 
-        def findRect(self, num)->Rectangle:
+        def findRect(self, num) -> Rectangle:
             for rect in self.rects:
                 if rect.num == num:
                     return rect
@@ -91,9 +105,8 @@ class RectangleController():
             self.r1.in_animation = False
             self.r2.in_animation = False
             self.r1.clickHandler.setClickable(True)
-            self.winChecker.check()
 
-    class TimeoutActions_clrColl(MyClearedCollection):
+    class AfterMovementActions_clrColl(MyClearableCollection):
         def shouldDelete(self, elem):
             elem.timer.remainingTime() <= 0
 

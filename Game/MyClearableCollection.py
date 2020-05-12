@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QTimer
 
 
-class MyClearedCollection():
+class MyClearableCollection():
 
     def __init__(self):
         self.collection = []
