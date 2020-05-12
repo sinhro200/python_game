@@ -32,16 +32,15 @@ class QMWind_GameScene(QMainWindow):
     def initTimer(self, pastTime=0):
         pass
 
-    def initConditionsToWin(self, win_conditions):
-        pass
-
     # should use after @initRectangles
-    def initRectanglesLogic(self, rect_time_to_move, movingPaths):
+    def initRectanglesLogic(self, rect_time_to_move, movingPaths, conditions_to_win):
         animator = Animator(self.animations, rect_time_to_move)
         controller = RectangleController(
             self.rects,
             movingPaths,
-            animator
+            animator,
+            conditions_to_win,
+            self.action_win
         )
 
     def createMenu(self):
@@ -90,3 +89,6 @@ class QMWind_GameScene(QMainWindow):
 
     def action_quit(self):
         pass
+
+    def action_win(self):
+        print("win!!")

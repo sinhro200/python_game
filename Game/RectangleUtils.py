@@ -10,10 +10,12 @@ from GameParams import MovingPath
 
 class RectangleController():
 
-    def __init__(self, rects: List[Rectangle], movingPaths: List[MovingPath], animator):
+    def __init__(self, rects: List[Rectangle], movingPaths: List[MovingPath], animator, conditions_to_win, action_win):
         self.rects = rects
         self.movingPaths = movingPaths
         self.animator = animator
+        self.isWinChecker = RectangleController.IsWinChecker(self.rects, conditions_to_win, action_win)
+        # self.conditions_to_win = conditions_to_win
         self.timeoutActions = RectangleController.TimeoutActions_clrColl()
         for r in rects:
             r.clickHandler = ClickHandler(self.onRectPressed)
@@ -41,8 +43,7 @@ class RectangleController():
 
     def swapRects(self, r1: Rectangle, r2: Rectangle):
         self.animator.move(r1, r2)
-
-        timeoutAction = RectangleController.AfterTimeoutAction(r1, r2)
+        timeoutAction = RectangleController.AfterMovementAction(r1, r2, self.isWinChecker)
         timeoutAction.run(self.animator.duration)
         self.timeoutActions.append(timeoutAction)
 
@@ -51,12 +52,33 @@ class RectangleController():
             if path.clickable.__contains__(num):
                 return path.movable
 
-    class AfterTimeoutAction():
-        def __init__(self, r1: Rectangle, r2: Rectangle):
+    class IsWinChecker():
+        def __init__(self, rects, conditions_to_win, onWinAction):
+            self.rects = rects
+            self.conditionsToVin = conditions_to_win
+            self.onWinAction = onWinAction
+
+        def check(self):
+            for win_path in self.conditionsToVin:
+                color = self.findRect(win_path[0]).color
+                for rect_num in win_path[1:]:
+                    rect = self.findRect(rect_num)
+                    if rect.color != color:
+                        return
+            self.onWinAction()
+
+        def findRect(self, num)->Rectangle:
+            for rect in self.rects:
+                if rect.num == num:
+                    return rect
+
+    class AfterMovementAction():
+        def __init__(self, r1: Rectangle, r2: Rectangle, winChecker):
             self.setRects(r1, r2)
             self.timer = QTimer()
             self.timer.setSingleShot(True)
             self.timer.timeout.connect(self.action)
+            self.winChecker = winChecker
 
         def run(self, time):
             self.timer.start(time * 1.1)
@@ -69,6 +91,7 @@ class RectangleController():
             self.r1.in_animation = False
             self.r2.in_animation = False
             self.r1.clickHandler.setClickable(True)
+            self.winChecker.check()
 
     class TimeoutActions_clrColl(MyClearedCollection):
         def shouldDelete(self, elem):
@@ -76,31 +99,8 @@ class RectangleController():
 
 
 class RectangleFactory():
-    global def_color
-    def_color = QColor(556677)
     global field_size
     field_size = 4
-
-    @staticmethod
-    def createDefRectangles(scene_parent, scene_width, scene_height, rect_size):
-        rects = []
-        leftRight_padding = (scene_width - 4 * rect_size - 3 * rect_size / 2) / 2
-        topDown_padding = (scene_height - 4 * rect_size - 3 * rect_size / 2) / 2
-        for i in range(field_size):
-            for j in range(field_size):
-                rects.append(
-                    Rectangle(
-                        scene_parent,
-                        j + i * field_size,
-                        [
-                            (float)((j % field_size) * rect_size + j * rect_size / 2 + leftRight_padding),
-                            (float)((i % field_size) * rect_size + i * rect_size / 2 + topDown_padding)
-                        ],
-                        rect_size,
-                        def_color
-                    )
-                )
-        return rects
 
     @staticmethod
     def createRectangles(scene_parent, scene_width, scene_height, rect_size, colors_by_nums, apply_labels):
