@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPaintEvent, QColor
-from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction, QLabel
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction, QLabel, QMessageBox
 
 from Game.Animation import Animator, AnimationCollection_clrColl
 from Game.RectangleUtils import RectangleFactory, RectangleController
@@ -61,6 +61,8 @@ class QMWind_GameScene(QMainWindow):
         def updateText(self):
             self.label.setText(int(self.timeMs / 1000).__str__())
 
+        def getTime(self):
+            return self.timeMs
         # should use after @initRectangles
 
     def initRectanglesLogic(self, rect_time_to_move, movingPaths, conditions_to_win):
@@ -117,8 +119,11 @@ class QMWind_GameScene(QMainWindow):
     def action_load(self):
         pass
 
-    def action_quit(self):
-        pass
-
     def action_win(self):
-        print("win!!")
+        self.qMessageBox = QMessageBox()
+        self.qMessageBox.setText("Victory")
+        if self.gameTimer != None:
+            self.qMessageBox.setInformativeText("You won in " + (self.gameTimer.getTime() / 1000).__str__() + " sec")
+        self.qMessageBox.setStandardButtons(QMessageBox.Ok)
+        self.qMessageBox.buttonClicked.connect(self.action_quit)
+        self.qMessageBox.exec()
