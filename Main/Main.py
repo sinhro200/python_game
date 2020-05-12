@@ -36,9 +36,7 @@ class MainWindow(QMainWindow):
         )
         self.rulesScene = QWid_RulesScene(self, MyAction("Back", self.state_menu))
         self.settingsScene = QWid_SettingsScene(self, MyAction("Back", self.action_quit_from_settings))
-        self.gameScene = self.createGameScene()
 
-        self.stckWidg_scene.addWidget(self.gameScene)
         self.stckWidg_scene.addWidget(self.settingsScene)
         self.stckWidg_scene.addWidget(self.menuScene)
         self.stckWidg_scene.addWidget(self.rulesScene)

@@ -124,7 +124,7 @@ class DefaultValues():
 
     @staticmethod
     def default_apply_timer():
-        return False
+        return True
 
     @staticmethod
     def default_remain_time_msec():

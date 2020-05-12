@@ -65,6 +65,7 @@ class QWid_SettingsScene(QWidget):
         self.sizeModule.setValue(gameParams.sett_rect_size)
         self.timeToMoveModule.setValue(gameParams.sett_rectangle_time_to_move)
         self.applyLabelsModule.setValue(gameParams.sett_apply_labels)
+        self.applyTimerModule.setValue(gameParams.sett_apply_timer)
         self.colorsModule.setValue(gameParams.sett_colors_palette)
 
     def getChangedGameParams(self):

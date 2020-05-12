@@ -1,5 +1,6 @@
-from PyQt5.QtGui import QPaintEvent
-from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction
+from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtGui import QPaintEvent, QColor
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMenuBar, QAction, QLabel
 
 from Game.Animation import Animator, AnimationCollection_clrColl
 from Game.RectangleUtils import RectangleFactory, RectangleController
@@ -16,6 +17,7 @@ class QMWind_GameScene(QMainWindow):
         self.main_win = main_window
         self.scene_width = width
         self.scene_height = height
+        self.gameTimer = None
         # self.painter = QPainter(self)
 
     def onShow(self):
@@ -29,10 +31,38 @@ class QMWind_GameScene(QMainWindow):
             self, scene_width, scene_height, rect_size, colors, apply_labels
         )
 
-    def initTimer(self, pastTime=0):
-        pass
+    def initTimer(self, pastTime=None):
+        if pastTime == None:
+            return
+        self.timerLabel = QLabel(self)
+        self.timerLabel.setFixedWidth(50)
+        self.timerLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.timerLabel.move(self.scene_width - self.timerLabel.width() - 5, self.timerLabel.y() + 5)
+        self.timerLabel.setStyleSheet("QWidget {font-size:20px; padding-left:10; background-color: #44000000}")
+        self.layout().addWidget(self.timerLabel)
+        self.gameTimer = QMWind_GameScene.GameTimer(self.timerLabel, pastTime)
 
-    # should use after @initRectangles
+    class GameTimer():
+        deltaTimeMs = 1000
+
+        def __init__(self, label: QLabel, pastTime):
+            self.gameTimer = QTimer()
+            self.label = label
+            self.timeMs = pastTime
+            self.updateText()
+
+            self.gameTimer.timeout.connect(self.timerTick)
+            self.gameTimer.start(self.deltaTimeMs)
+
+        def timerTick(self):
+            self.timeMs = self.timeMs + self.deltaTimeMs
+            self.updateText()
+
+        def updateText(self):
+            self.label.setText(int(self.timeMs / 1000).__str__())
+
+        # should use after @initRectangles
+
     def initRectanglesLogic(self, rect_time_to_move, movingPaths, conditions_to_win):
         animator = Animator(self.animations, rect_time_to_move)
         controller = RectangleController(

@@ -26,7 +26,8 @@ class GameConstructor():
             gameParams.sett_moving_paths,
             gameParams.conditions_to_win
         )
-        game_scene.initTimer()
+        if gameParams.sett_apply_timer:
+            game_scene.initTimer(0)
 
         return game_scene
 
