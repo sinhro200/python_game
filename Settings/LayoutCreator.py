@@ -1,13 +1,18 @@
+from cmath import sqrt
 from typing import List
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QTextEdit, QSizePolicy, QPushButton, QCheckBox, \
-    QColorDialog
+    QColorDialog, QLayout
 
 
-class Scene(QVBoxLayout):
+class MyVerticalLayout(QVBoxLayout):
     def __init__(self):
         super().__init__()
+
+    def addModule(self, module: QLayout):
+        self.addLayout(module)
+        # self.setAlignment(module,Qt.AlignTop)
 
 
 class MyModule(QHBoxLayout):
@@ -133,3 +138,63 @@ class ColorModule(MyLabeledModule):
     def getColor4(self):
         self.color4 = QColorDialog.getColor()
         self.setColor(self.btn_col4, self.color4)
+
+
+class WinPathsModule(MyModule):
+    splitter = " "
+    def initBody(self, name, defValue):
+        self.editText_array = []
+        self.body = None
+        self.name = name
+        self.editText_array.clear()
+        body = QVBoxLayout()
+        self.addLayout(body)
+        body.addWidget(
+            QLabel(self.name)
+        )
+        if defValue == None:
+            return
+        size = len(defValue)
+        # self.tableLayout.deleteLater()
+        self.tableLayout = QVBoxLayout()
+        for i in range(size):
+            lineLayout = QHBoxLayout()
+            for j in range(size):
+                label = QLabel((i * 4 + j).__str__())
+                label.setFixedSize(20, 20)
+                lineLayout.addWidget(label)
+            self.tableLayout.addLayout(lineLayout)
+        # self.body.addLayout(tableLayout)
+        # self.editTextsLayout.deleteLater()
+        self.editTextsLayout = QVBoxLayout()
+        for win_path in defValue:
+            text = win_path[0].__str__()
+            for rect_num in win_path[1:]:
+                text = text + WinPathsModule.splitter + rect_num.__str__()
+            editText = QTextEdit(text)
+            editText.setMaximumWidth(200)
+            editText.setMaximumHeight(30)
+            self.editText_array.append(editText)
+            self.editTextsLayout.addWidget(editText)
+
+        body.addLayout(self.tableLayout)
+        body.addLayout(self.editTextsLayout)
+
+
+    def getValue(self):
+        resArr = []
+        for editText in self.editText_array:
+            str_vals = editText.toPlainText().__str__()
+            resArr.append(str_vals.split(WinPathsModule.splitter))
+        return resArr
+
+    def setValue(self, value):
+        i=0
+        for win_path in value:
+            text = win_path[0].__str__()
+            for rect_num in win_path[1:]:
+                text = text + WinPathsModule.splitter + rect_num.__str__()
+            editText = self.editText_array[i]
+            editText.setText(text)
+            i=i+1
+

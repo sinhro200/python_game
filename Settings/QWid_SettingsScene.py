@@ -1,6 +1,7 @@
 import copy
 
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QHBoxLayout, QVBoxLayout
 
 from MyAction import MyAction
 from GameParams import GameParams, Restrictions
@@ -8,7 +9,9 @@ from Settings import LayoutCreator
 
 
 class QWid_SettingsScene(QWidget):
-    scene_width = 300
+    scene_width = 600
+    scene_left_width = 300
+    scene_right_width = 300
     scene_height = 400
 
     def __init__(self, main_window: QMainWindow, actionBack: MyAction):
@@ -20,7 +23,9 @@ class QWid_SettingsScene(QWidget):
         self.backValues = BackValues()
 
     def createSceneLayout(self):
-        scene = LayoutCreator.Scene()
+        scene = QVBoxLayout()
+        topLayout = QHBoxLayout()
+        left_layout = LayoutCreator.MyVerticalLayout()
 
         self.widthModule = LayoutCreator.EditTextModule("width")
         self.heightModule = LayoutCreator.EditTextModule("height")
@@ -32,17 +37,30 @@ class QWid_SettingsScene(QWidget):
 
         self.buttonModule = LayoutCreator.ButtonModule(["back", "reset"], [self.onBack, self.reset])
 
-        scene.addLayout(self.widthModule)
-        scene.addLayout(self.heightModule)
-        scene.addLayout(self.sizeModule)
-        scene.addLayout(self.timeToMoveModule)
-        scene.addLayout(self.applyTimerModule)
-        scene.addLayout(self.applyLabelsModule)
-        scene.addLayout(self.colorsModule)
+        left_layout.addModule(self.widthModule)
+        # left_layout.setAlignment(self.widthModule,Qt.AlignTop)
+        left_layout.addModule(self.heightModule)
+        left_layout.addModule(self.sizeModule)
+        left_layout.addModule(self.timeToMoveModule)
+        left_layout.addModule(self.applyTimerModule)
+        left_layout.addModule(self.applyLabelsModule)
+        left_layout.addModule(self.colorsModule)
+        # left_layout.addModule(self.buttonModule)
+        left_layout.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
 
-        scene.addLayout(self.buttonModule)
+        self.winPathsModule = None
+        right_layout = LayoutCreator.MyVerticalLayout()
 
-        print(self.widthModule.getValue())
+        right_layout.addLayout(LayoutCreator.EditTextModule("test2"))
+        right_layout.addLayout(LayoutCreator.EditTextModule("test3"))
+        self.right_layout = right_layout
+        topLayout.addLayout(left_layout, 1)
+        topLayout.addLayout(right_layout)
+        scene.addLayout(topLayout)
+
+        downLayout = QHBoxLayout()
+        downLayout.addLayout(self.buttonModule)
+        scene.addLayout(downLayout)
 
         # vboxMenu.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         return scene
@@ -51,6 +69,9 @@ class QWid_SettingsScene(QWidget):
         print(width)
 
     def onShow(self, gameParams: GameParams):
+        if self.winPathsModule == None:
+            self.winPathsModule = LayoutCreator.WinPathsModule("win conditions", gameParams.conditions_to_win)
+            self.right_layout.addLayout(self.winPathsModule)
         self.setGameParams(gameParams)
         self.main_win.setGeometry(
             QDesktopWidget().availableGeometry().center().x() - self.scene_width / 2,
@@ -67,6 +88,7 @@ class QWid_SettingsScene(QWidget):
         self.applyLabelsModule.setValue(gameParams.sett_apply_labels)
         self.applyTimerModule.setValue(gameParams.sett_apply_timer)
         self.colorsModule.setValue(gameParams.sett_colors_palette)
+        self.winPathsModule.setValue(gameParams.conditions_to_win)
 
     def getChangedGameParams(self):
         return self.gameParams
@@ -79,6 +101,7 @@ class QWid_SettingsScene(QWidget):
         self.backValues.applyLabels(self.applyLabelsModule.getValue())
         self.backValues.timeToMove(self.timeToMoveModule.getValue())
         self.backValues.colors_palette(self.colorsModule.getValue())
+        self.backValues.winPaths(self.winPathsModule.getValue())
 
         try:
             self.gameParams = self.backValues.convertToGameParams(self._gameParams)
@@ -109,6 +132,20 @@ class BackValues():
         apply_timer = bool(self._applyTimer)
         apply_labels = bool(self._applyLabels)
 
+        defCount = 0
+        for a in default_gp.conditions_to_win:
+            for b in a:
+                defCount = defCount+1
+        set = []
+        for wp in self._winPaths:
+            for num in wp:
+                int(num)
+                if set.__contains__(num):
+                    raise Exception()
+                set.append(num)
+        if len(set) != defCount:
+            raise Exception()
+
         gp = copy.deepcopy(default_gp)
         if self._width != None:
             gp.sett_game_scene_width = width
@@ -124,6 +161,8 @@ class BackValues():
             gp.sett_apply_labels = apply_labels
         if self._colorsPalette != None:
             gp.sett_colors_palette = self._colorsPalette
+        if self._winPaths != None:
+            gp.conditions_to_win = self._winPaths
 
         if not Restrictions.check(gp):
             raise Exception()
@@ -159,3 +198,9 @@ class BackValues():
         for c in val:
             print(c.__str__())
         self._colorsPalette = val
+
+    def winPaths(self, val):
+        print("win paths")
+        for wp in val:
+            print(wp.__str__())
+        self._winPaths = val
