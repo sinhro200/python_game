@@ -76,10 +76,10 @@ class BooleanModule(MyLabeledModule):
         return self.checkBox
 
     def getValue(self):
-        return self.checkBox.isEnabled()
+        return self.checkBox.isChecked()
 
     def setValue(self, value):
-        self.checkBox.setEnabled(value)
+        self.checkBox.setChecked(value)
 
 
 class ColorModule(MyLabeledModule):
