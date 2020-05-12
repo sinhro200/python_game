@@ -144,4 +144,4 @@ class DefaultValues():
 
     @staticmethod
     def default_rect_time_to_move_msec():
-        return 1000
+        return 600

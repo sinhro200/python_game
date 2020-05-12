@@ -63,8 +63,6 @@ class QWid_SettingsScene(QWidget):
 
         return scene
 
-    def getWidth(self, width):
-        print(width)
 
     def onShow(self, gameParams: GameParams):
         if self.winPathsModule == None:
@@ -112,6 +110,7 @@ class QWid_SettingsScene(QWidget):
 
     def action_wrong_values(self):
         self.qMessageBox = QMessageBox()
+        self.qMessageBox.setIcon(QMessageBox.Critical)
         self.qMessageBox.setText("Error")
         self.qMessageBox.setInformativeText("Settings are incorrect")
         self.qMessageBox.setStandardButtons(QMessageBox.Ok)
@@ -128,7 +127,6 @@ class BackValues():
         self._applyLabels = None
 
     def convertToGameParams(self, default_gp) -> GameParams:
-        print("default win paths")
         defCount = 0
         for wp in default_gp.conditions_to_win:
             defCount = defCount+len(wp)
@@ -177,37 +175,25 @@ class BackValues():
         return gp
 
     def width(self, val):
-        print("width " + val)
         self._width = val
 
     def height(self, val):
-        print("height " + val)
         self._height = val
 
     def size(self, val):
-        print("size " + val)
         self._size = val
 
     def timeToMove(self, val):
-        print("time to move " + val)
         self._timeToMove = val
 
     def applyTimer(self, val):
-        print("apply timer " + val.__str__())
         self._applyTimer = val
 
     def applyLabels(self, val):
-        print("apply labels " + val.__str__())
         self._applyLabels = val
 
     def colors_palette(self, val):
-        print("colors :")
-        for c in val:
-            print(c.__str__())
         self._colorsPalette = val
 
     def winPaths(self, val):
-        print("win paths")
-        for wp in val:
-            print(wp.__str__())
         self._winPaths = val

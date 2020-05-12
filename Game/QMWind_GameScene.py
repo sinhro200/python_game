@@ -18,6 +18,7 @@ class QMWind_GameScene(QMainWindow):
         self.scene_width = width
         self.scene_height = height
         self.gameTimer = None
+        self.stepsCounter = 0
 
     def onShow(self):
         self.main_win.setGeometry(
@@ -84,22 +85,12 @@ class QMWind_GameScene(QMainWindow):
         quitAction.triggered.connect(self.action_quit)
         fileMenu.addAction(quitAction)
 
-    def mousePressEvent(self, e):
-        self.mousePressed = True
-        self.startX = e.x()
-        self.startY = e.y()
-
-    def action_save(self):
-        pass
-
-    def action_load(self):
-        pass
-
-    def action_win(self):
+    def action_win(self,count=None):
         self.qMessageBox = QMessageBox()
         self.qMessageBox.setText("Victory")
         if self.gameTimer != None:
-            self.qMessageBox.setInformativeText("You won in " + (self.gameTimer.getTime() / 1000).__str__() + " sec")
+            self.qMessageBox.setInformativeText("You won in " + (self.gameTimer.getTime() / 1000).__str__() + " sec" +
+                                                "\n" + "You made " + count.__str__() + " steps")
         self.qMessageBox.setStandardButtons(QMessageBox.Ok)
         self.qMessageBox.buttonClicked.connect(self.action_quit)
         self.qMessageBox.exec()

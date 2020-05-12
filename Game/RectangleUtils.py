@@ -64,6 +64,7 @@ class RectangleController():
             self.conditionsToVin = conditions_to_win
             self.onWinAction = onWinAction
             self.timers = RectangleController.Timers_clrColl()
+            self.counter = 0
 
         def lateCheck(self, timeMsec):
             timer = QTimer()
@@ -73,13 +74,17 @@ class RectangleController():
             self.timers.append(timer)
 
         def check(self):
+            self.counter = self.counter + 1
             for win_path in self.conditionsToVin:
-                color = self.findRect(win_path[0]).color
+                rect = self.findRect(win_path[0])
+                if rect == None:
+                    return
+                color = rect.color
                 for rect_num in win_path[1:]:
                     rect = self.findRect(rect_num)
                     if rect.color != color:
                         return
-            self.onWinAction()
+            self.onWinAction(self.counter)
 
         def findRect(self, num) -> Rectangle:
             for rect in self.rects:

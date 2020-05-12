@@ -17,8 +17,7 @@ class GameConstructor():
             gameParams.sett_game_scene_width,
             gameParams.sett_game_scene_height,
             gameParams.sett_rect_size,
-            GameConstructor.get_win_colors(gameParams.sett_colors_palette),
-            # GameConstructor.get_random_colors(gameParams.sett_colors_palette),
+            GameConstructor.get_random_colors(gameParams.sett_colors_palette),
             gameParams.sett_apply_labels
         )
         game_scene.initRectanglesLogic(
