@@ -1,7 +1,7 @@
 import copy
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QHBoxLayout, QVBoxLayout, QMessageBox
 
 from MyAction import MyAction
 from GameParams import GameParams, Restrictions
@@ -107,11 +107,17 @@ class QWid_SettingsScene(QWidget):
             self.gameParams = self.backValues.convertToGameParams(self._gameParams)
             self.actionBack()
         except:
-            pass
+            self.action_wrong_values()
 
     def reset(self):
         self.setGameParams(self._gameParams)
 
+    def action_wrong_values(self):
+        self.qMessageBox = QMessageBox()
+        self.qMessageBox.setText("Error")
+        self.qMessageBox.setInformativeText("Settings are incorrect")
+        self.qMessageBox.setStandardButtons(QMessageBox.Ok)
+        self.qMessageBox.exec()
 
 class BackValues():
     def __init__(self):
@@ -124,6 +130,10 @@ class BackValues():
         self._applyLabels = None
 
     def convertToGameParams(self, default_gp) -> GameParams:
+        print("default win paths")
+        defCount = 0
+        for wp in default_gp.conditions_to_win:
+            defCount = defCount+len(wp)
         # gp = CopyGameParams(default_gp)
         width = float(self._width)
         height = float(self._height)
@@ -132,17 +142,16 @@ class BackValues():
         apply_timer = bool(self._applyTimer)
         apply_labels = bool(self._applyLabels)
 
-        defCount = 0
-        for a in default_gp.conditions_to_win:
-            for b in a:
-                defCount = defCount+1
+        winPaths = []
         set = []
         for wp in self._winPaths:
+            winPath = []
             for num in wp:
-                int(num)
+                winPath.append(int(num))
                 if set.__contains__(num):
                     raise Exception()
                 set.append(num)
+            winPaths.append(winPath)
         if len(set) != defCount:
             raise Exception()
 
@@ -162,7 +171,7 @@ class BackValues():
         if self._colorsPalette != None:
             gp.sett_colors_palette = self._colorsPalette
         if self._winPaths != None:
-            gp.conditions_to_win = self._winPaths
+            gp.conditions_to_win = winPaths
 
         if not Restrictions.check(gp):
             raise Exception()
