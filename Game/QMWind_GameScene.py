@@ -8,7 +8,6 @@ from MyAction import MyAction
 
 class QMWind_GameScene(QMainWindow):
 
-
     def __init__(self, main_window: QMainWindow, action_back: MyAction, width, height):
         super().__init__(main_window)
         self.action_quit = action_back.action
@@ -25,12 +24,12 @@ class QMWind_GameScene(QMainWindow):
             QDesktopWidget().availableGeometry().center().y() - self.scene_height / 2,
             self.scene_width, self.scene_height)
 
-    def initRectangles(self, scene_width, scene_height, rect_size, colors):
+    def initRectangles(self, scene_width, scene_height, rect_size, colors, apply_labels):
         self.rects = RectangleFactory.createRectangles(
-            self, scene_width, scene_height, rect_size, colors
+            self, scene_width, scene_height, rect_size, colors, apply_labels
         )
 
-    def initTimer(self):
+    def initTimer(self, pastTime=0):
         pass
 
     def initConditionsToWin(self, win_conditions):

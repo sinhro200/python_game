@@ -103,7 +103,7 @@ class RectangleFactory():
         return rects
 
     @staticmethod
-    def createRectangles(scene_parent, scene_width, scene_height, rect_size, colors_by_nums):
+    def createRectangles(scene_parent, scene_width, scene_height, rect_size, colors_by_nums, apply_labels):
         rects = []
         leftRight_padding = (scene_width - 4 * rect_size - 3 * rect_size / 2) / 2
         topDown_padding = (scene_height - 4 * rect_size - 3 * rect_size / 2) / 2
@@ -117,7 +117,8 @@ class RectangleFactory():
                         (float)((i % field_size) * rect_size + i * rect_size / 2 + topDown_padding)
                     ],
                     rect_size,
-                    colors_by_nums[j + i * field_size]
+                    colors_by_nums[j + i * field_size],
+                    apply_labels
                 )
                 rects.append(r)
         return rects

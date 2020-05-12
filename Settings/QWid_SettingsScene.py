@@ -27,6 +27,7 @@ class QWid_SettingsScene(QWidget):
         self.sizeModule = LayoutCreator.EditTextModule("size")
         self.timeToMoveModule = LayoutCreator.EditTextModule("time to move")
         self.applyTimerModule = LayoutCreator.BooleanModule("apply timer")
+        self.applyLabelsModule = LayoutCreator.BooleanModule("apply labels")
         self.colorsModule = LayoutCreator.ColorModule("Colors")
 
         self.buttonModule = LayoutCreator.ButtonModule(["back", "reset"], [self.onBack, self.reset])
@@ -36,6 +37,7 @@ class QWid_SettingsScene(QWidget):
         scene.addLayout(self.sizeModule)
         scene.addLayout(self.timeToMoveModule)
         scene.addLayout(self.applyTimerModule)
+        scene.addLayout(self.applyLabelsModule)
         scene.addLayout(self.colorsModule)
 
         scene.addLayout(self.buttonModule)
@@ -62,6 +64,7 @@ class QWid_SettingsScene(QWidget):
         self.widthModule.setValue(gameParams.sett_game_scene_width)
         self.sizeModule.setValue(gameParams.sett_rect_size)
         self.timeToMoveModule.setValue(gameParams.sett_rectangle_time_to_move)
+        self.applyLabelsModule.setValue(gameParams.sett_apply_labels)
         self.colorsModule.setValue(gameParams.sett_colors_palette)
 
     def getChangedGameParams(self):
@@ -72,6 +75,7 @@ class QWid_SettingsScene(QWidget):
         self.backValues.height(self.heightModule.getValue())
         self.backValues.size(self.sizeModule.getValue())
         self.backValues.applyTimer(self.applyTimerModule.getValue())
+        self.backValues.applyLabels(self.applyLabelsModule.getValue())
         self.backValues.timeToMove(self.timeToMoveModule.getValue())
         self.backValues.colors_palette(self.colorsModule.getValue())
 
@@ -93,6 +97,7 @@ class BackValues():
         self._timeToMove = None
         self._applyTimer = None
         self._colorsPalette = None
+        self._applyLabels = None
 
     def convertToGameParams(self, default_gp) -> GameParams:
         # gp = CopyGameParams(default_gp)
@@ -101,6 +106,7 @@ class BackValues():
         size = float(self._size)
         time_to_move = int(self._timeToMove)
         apply_timer = bool(self._applyTimer)
+        apply_labels = bool(self._applyLabels)
 
         gp = copy.deepcopy(default_gp)
         if self._width != None:
@@ -113,6 +119,8 @@ class BackValues():
             gp.sett_rectangle_time_to_move = time_to_move
         if self._applyTimer != None:
             gp.sett_apply_timer = apply_timer
+        if self._applyLabels != None:
+            gp.sett_apply_labels = apply_labels
         if self._colorsPalette != None:
             gp.sett_colors_palette = self._colorsPalette
 
@@ -140,6 +148,10 @@ class BackValues():
     def applyTimer(self, val):
         print("apply timer " + val.__str__())
         self._applyTimer = val
+
+    def applyLabels(self, val):
+        print("apply labels " + val.__str__())
+        self._applyLabels = val
 
     def colors_palette(self, val):
         print("colors :")

@@ -3,10 +3,12 @@ from PyQt5.QtGui import QColor
 
 class GameParams():
 
-    def __init__(self, colors_palette, moving_paths, apply_labels, apply_timer, game_width, game_height,
+    def __init__(self, colors_palette, moving_paths, conditions_to_win, apply_labels, apply_timer, game_width,
+                 game_height,
                  rect_size, rectangle_time_to_move):
         self.sett_colors_palette = colors_palette
         self.sett_moving_paths = moving_paths
+        self.conditions_to_win = conditions_to_win
         self.sett_apply_labels = apply_labels
         self.sett_apply_timer = apply_timer
         self.sett_game_scene_width = game_width
@@ -80,6 +82,7 @@ class DefaultValues():
         return GameParams(
             DefaultValues.default_colors_palette(),
             DefaultValues.default_paths(),
+            DefaultValues.default_conditions_to_win(),
             DefaultValues.default_apply_labels(),
             DefaultValues.default_apply_timer(),
             DefaultValues.default_width(),
@@ -105,6 +108,15 @@ class DefaultValues():
                 MovingPath([11, 14, 15], [10, 11, 15, 14]),
                 MovingPath([5, 6, 9, 10], [5, 6, 10, 9])
                 ]
+
+    @staticmethod
+    def default_conditions_to_win():
+        return [
+            [0, 1, 4, 5],
+            [2, 3, 6, 7],
+            [8, 9, 12, 13],
+            [10, 11, 14, 15]
+        ]
 
     @staticmethod
     def default_apply_labels():

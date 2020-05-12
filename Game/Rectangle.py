@@ -18,10 +18,11 @@ class ClickHandler():
 
 class Rectangle(QPushButton):
 
-    def __init__(self, parent, _num, pos, size, color: QColor):
+    def __init__(self, parent, _num, pos, size, color: QColor, apply_labels):
         super().__init__(parent)
         self._num = _num
-        self.setText(_num.__str__())
+        self.apply_labels = apply_labels
+        self.num = _num
         self.size = size
         self.color = color
         self.setFixedSize(size, size)
@@ -37,7 +38,8 @@ class Rectangle(QPushButton):
     @num.setter
     def num(self, val):
         self._num = val
-        self.setText(self._num.__str__())
+        if self.apply_labels:
+            self.setText(self._num.__str__())
         self.update()
         self.updateGeometry()
 
