@@ -36,10 +36,10 @@ class QWid_RulesScene(QWidget):
         label.setFixedWidth(self.scene_width)
 
         vboxScene = QVBoxLayout()
-        vboxScene.addStretch(1)
         vboxScene.addWidget(label)
         vboxScene.addWidget(btnBack)
-        vboxScene.setAlignment(Qt.AlignHCenter)
+        vboxScene.setAlignment(btnBack,Qt.AlignHCenter)
+        vboxScene.setAlignment(Qt.AlignTop|Qt.AlignHCenter)
         return vboxScene
 
     def readRulesFromFile(self) -> str:

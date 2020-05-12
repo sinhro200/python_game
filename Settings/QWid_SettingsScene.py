@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QHBoxLayout, QVBoxLayout, QMessageBox
 
 from MyAction import MyAction
-from GameParams import GameParams, Restrictions
+from GameParams import GameParams, Restrictions, DefaultValues
 from Settings import LayoutCreator
 
 
@@ -35,7 +35,7 @@ class QWid_SettingsScene(QWidget):
         self.applyLabelsModule = LayoutCreator.BooleanModule("apply labels")
         self.colorsModule = LayoutCreator.ColorModule("Colors")
 
-        self.buttonModule = LayoutCreator.ButtonModule(["back", "reset"], [self.onBack, self.reset])
+        self.buttonModule = LayoutCreator.ButtonModule(["back", "default"], [self.onBack, self.default_params])
 
         left_layout.addModule(self.widthModule)
         # left_layout.setAlignment(self.widthModule,Qt.AlignTop)
@@ -51,18 +51,16 @@ class QWid_SettingsScene(QWidget):
         self.winPathsModule = None
         right_layout = LayoutCreator.MyVerticalLayout()
 
-        right_layout.addLayout(LayoutCreator.EditTextModule("test2"))
-        right_layout.addLayout(LayoutCreator.EditTextModule("test3"))
         self.right_layout = right_layout
-        topLayout.addLayout(left_layout, 1)
+        topLayout.addLayout(left_layout)
         topLayout.addLayout(right_layout)
+        topLayout.setSpacing(10)
         scene.addLayout(topLayout)
 
         downLayout = QHBoxLayout()
         downLayout.addLayout(self.buttonModule)
         scene.addLayout(downLayout)
 
-        # vboxMenu.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         return scene
 
     def getWidth(self, width):
@@ -109,8 +107,8 @@ class QWid_SettingsScene(QWidget):
         except:
             self.action_wrong_values()
 
-    def reset(self):
-        self.setGameParams(self._gameParams)
+    def default_params(self):
+        self.setGameParams(DefaultValues.create())
 
     def action_wrong_values(self):
         self.qMessageBox = QMessageBox()

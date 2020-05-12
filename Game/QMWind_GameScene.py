@@ -78,17 +78,6 @@ class QMWind_GameScene(QMainWindow):
     def createMenu(self):
         mainMenu = QMenuBar(self)
         fileMenu = mainMenu.addMenu('File')
-        viewMenu = mainMenu.addMenu('View')
-
-        quitAction = QAction('Save', self)
-        quitAction.setShortcut("Ctrl+S")
-        quitAction.triggered.connect(self.action_save)
-        fileMenu.addAction(quitAction)
-
-        quitAction = QAction('Load', self)
-        quitAction.setShortcut("Ctrl+L")
-        quitAction.triggered.connect(self.action_load)
-        fileMenu.addAction(quitAction)
 
         quitAction = QAction('Quit', self)
         quitAction.setShortcut("Ctrl+Q")
