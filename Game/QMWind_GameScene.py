@@ -18,7 +18,6 @@ class QMWind_GameScene(QMainWindow):
         self.scene_width = width
         self.scene_height = height
         self.gameTimer = None
-        # self.painter = QPainter(self)
 
     def onShow(self):
         self.main_win.setGeometry(
@@ -63,6 +62,7 @@ class QMWind_GameScene(QMainWindow):
 
         def getTime(self):
             return self.timeMs
+
         # should use after @initRectangles
 
     def initRectanglesLogic(self, rect_time_to_move, movingPaths, conditions_to_win):
@@ -95,23 +95,10 @@ class QMWind_GameScene(QMainWindow):
         quitAction.triggered.connect(self.action_quit)
         fileMenu.addAction(quitAction)
 
-    # def createBody(self, gameParams: GameParams):
-    # self.rects = RectangleFactory.createDefRectangles(
-    #     self, self.scene_width, self.scene_height, self.rect_size
-    # )
-
     def mousePressEvent(self, e):
         self.mousePressed = True
         self.startX = e.x()
         self.startY = e.y()
-
-    # def drawRects(self):
-    #     for rect in self.rects:
-    #         rect.draw(self.painter, self)
-
-    def paintEvent(self, a0: QPaintEvent) -> None:
-        pass
-        # self.drawRects()
 
     def action_save(self):
         pass
